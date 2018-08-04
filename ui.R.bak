@@ -1,0 +1,87 @@
+####################INDIAN SUICIDE CASE FROM 2001-2012#######################
+
+#Packages
+ifelse(!require(shiny), install.packages('shiny'), library(shiny))
+ifelse(!require(ggthemes), install.packages('ggthemes'), library(ggthemes))
+ifelse(!require(ggplot2), install.packages('ggplot2'), library(ggplot2))
+ifelse(!require(dplyr), install.packages('dplyr'), library(dplyr))
+ifelse(!require(tidyr), install.packages('tidyr'), library(tidyr))
+ifelse(!require(data.table), install.packages('data.table'), library(data.table))
+ifelse(!require(shinythemes), install.packages('shinythemes'), library(shinythemes))
+ifelse(!require(shinydashboard), install.packages('shinydashboard'), library(shinydashboard))
+ifelse(!require(shinyjs),install.packages('shinyjs'),library(shinyjs))
+
+
+
+
+################## Define UI########################
+dashboardPage(
+  dashboardHeader(title = 'Indian Suicide Cases(2001 - 12)'),
+
+  dashboardSidebar(
+    #Selecting States
+    selectInput(
+      'select_state',
+      choices = unique(choices),
+      selected = character(0),
+      label = 'States'
+    ),#selectinput-stateip
+
+    #Selecting Years
+    selectInput("select_year",
+                "Select year",
+                choices = character(0),
+                selected = character(0)),#selectinput-year
+
+    #Checkbox for gender
+    checkboxGroupInput(
+      'check_gender',
+      'Select Gender',
+      choices =  unique(suicide$Gender),
+      selected = character(0)
+    )#checkboxgroup-gender
+
+  ), #dashbaord-sidebar
+
+  dashboardBody(
+    tabPanel(
+      title = 'Info'
+    ), #infotabpanel
+
+    tabPanel(
+      title = 'Visual',
+      #Row1
+      fluidRow(
+        #HISTOGRAM
+        box(title = 'histogram',
+            height = 200,
+            plotOutput('histplot'),
+            checkboxGroupInput(
+              inputId = 'plotyear',
+              label = '',
+              choices = character(0),
+              inline = T,
+              selected = character(0)
+            )#checkbox-year-plot
+        ),
+        #BARPLOT
+        box(title = 'barplot',
+            height = 200,
+            plotOutput('barplot'))
+      ),#Row1
+      #Row2
+      fluidRow(
+        #PIECHART
+        box(title = 'piechart',
+            height = 200,
+            plotOutput('histplot')),
+        #SCATTERPLOT
+        box(title = 'scatterplot',
+            height = 200,
+            plotOutput('pieplot'))
+      )#Row2
+    )#visualtabpanel
+  )#dashboard-body
+)#UI
+
+

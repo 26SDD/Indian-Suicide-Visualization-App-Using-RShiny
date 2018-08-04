@@ -1,0 +1,15 @@
+
+    A & N Islands    Andhra Pradesh Arunachal Pradesh             Assam             Bihar        Chandigarh 
+             6712              6791              6707              6786              6790              6717 
+     Chhattisgarh      D & N Haveli       Daman & Diu        Delhi (Ut)               Goa           Gujarat 
+             6790              6704              6710              6782              6759              6786 
+          Haryana  Himachal Pradesh   Jammu & Kashmir         Jharkhand         Karnataka            Kerala 
+             6790              6774              6761              6785              6792              6788 
+      Lakshadweep    Madhya Pradesh       Maharashtra           Manipur         Meghalaya           Mizoram 
+             6674              6792              6792              6700              6733              6737 
+         Nagaland            Odisha        Puducherry            Punjab         Rajasthan            Sikkim 
+             6705              6791              6730              6779              6791              6742 
+       Tamil Nadu Total (All India)    Total (States)       Total (Uts)           Tripura     Uttar Pradesh 
+             6786               312               312               312              6782              6787 
+      Uttarakhand       West Bengal 
+             6758              6780 

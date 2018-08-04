@@ -1,0 +1,221 @@
+####################INDIAN SUICIDE CASE FROM 2001-2012#######################
+
+#Packages
+ifelse(!require(shiny), install.packages('shiny'), library(shiny))
+ifelse(!require(ggthemes), install.packages('ggthemes'), library(ggthemes))
+ifelse(!require(ggplot2), install.packages('ggplot2'), library(ggplot2))
+ifelse(!require(dplyr), install.packages('dplyr'), library(dplyr))
+ifelse(!require(tidyr), install.packages('tidyr'), library(tidyr))
+ifelse(!require(data.table), install.packages('data.table'), library(data.table))
+ifelse(!require(shinythemes), install.packages('shinythemes'), library(shinythemes))
+ifelse(!require(shinydashboard), install.packages('shinydashboard'), library(shinydashboard))
+ifelse(!require(shinyjs),install.packages('shinyjs'),library(shinyjs))
+# ifelse(!require(leaflet), install.packages('leaflet'), library(leaflet))
+# ifelse(!require(plot3D),install.packages('plot3D'),library(plot3D))
+
+
+
+
+
+
+
+#############LOAD DATA###############
+if (!exists('suicide')) {
+  suicide = fread(input = 'data/Suicides in India 2001-2012.csv', header = T)
+} else{
+  print("already exists")
+}
+
+#SINK ALL OUTPUT VALUES FROM THE CONSOLE TO TEXT FILE
+sink('type.txt')
+table(suicide$Type)
+sink()
+
+sink('causes.txt')
+table(suicide$Type_code)
+sink()
+
+sink('year.txt')
+table(suicide$Year)
+sink()
+
+sink('Age Group')
+table(suicide$Age_group)
+sink()
+
+sink('state.txt')
+table(suicide$State)
+sink()
+
+# table(suicide$State)
+
+
+
+row1 <- fluidRow(textOutput(outputId = 'infotext'))
+row2 <- fluidRow(plot('plotopt'))
+
+
+#####################FUNCTIONS#######################
+x = c('Total (All India)', 'Total (Uts)', 'Total (States)')
+choices = suicide$State[!(suicide$State %in% x)]  DFF
+
+
+
+plothist <- function(df,col_name){
+  require(ggplot2)
+  require(dplyr)
+  df <- as.data.frame(df)
+  histObj = df %>% ggplot(aes(x = col_name[1], y = col_name[2]))
+  # histObj > % > scale_x_continuous(name =)
+}
+
+
+
+plotbar <- function(df, col_name){
+
+}
+
+
+
+
+################## Define UI########################
+ui <- dashboardPage(
+  skin = 'black',
+
+  dashboardHeader(title = 'Indian Suicide Cases(2001 - 12)'),
+
+  dashboardSidebar(
+    collapsed = F,
+    #Selecting States
+    selectInput(
+      'select_state',
+      choices = unique(choices),
+      selected = character(0),
+      label = 'States',
+      multiple = T
+    ),#selectinput-stateip
+
+    #Selecting Years
+    selectInput(
+      "select_year",
+      "Select year",
+      choices = unique(suicide$Year),
+      selected = character(0)
+    ),#selectinput-year
+
+    #Radio bUtton Age Group
+   radioButtons(
+     inputId = 'rbt_age',
+     label = 'Age Group',
+     choices = unique(suicide$Age_group),
+     inline = T,
+     selected = 1
+   )#radiobtn
+
+  ),
+  #dashbaord-sidebar
+
+  dashboardBody(
+    tabBox(
+      fluidRow(tabName =  'BarPlot',
+              fluidRow(
+                #BARPLOT
+                box(
+                  title = 'barplot',
+                  height = 200,
+                  plotOutput('barplot')
+                ))
+      ),#barplotTabitem
+      tabItem(tabName = 'Histogram',
+              #HISTOGRAM
+              box(
+                title = 'histogram',
+                height = 200,
+                plotOutput('histplot'),
+                checkboxGroupInput(
+                  inputId = 'plotyear',
+                  label = '',
+                  choices = character(0),
+                  inline = T,
+                  selected = character(0)
+                )#checkbox-year-plot
+              )#boX
+    ), #histogramTabpanel
+
+    tabItem(
+      tabName = 'PieChart',
+      #PIECHART
+      box(title = 'piechart',
+          height = 200,
+          plotOutput('histplot'))
+    ), #piechartTabItem
+    tabItem(
+      tabName = 'scatter',
+      #SCATTERPLOT
+      box(title = 'scatterplot',
+          height = 200,
+          plotOutput('pieplot'))
+    ),#ScatterTabItem
+    tabItem(
+      tabName = 'ALL'
+    )#mapTabItem
+    )#TabItems
+  )#dashboard-body
+)#UI
+
+############################SERVER FUNCTION############################
+server <- function(input, output, session) {
+  data = suicide
+  allinfo = 'Welcome here you will get the information related to the suicidal cases in india form 2001-2012'
+
+  year_choice <- NULL
+
+  # selectstate <- reactive(input$select_state,{
+  #   year_choice = suicide %>% filter(suicide$State %in% selectstate) %>% select('Year')
+  # })
+
+  #observe - ui
+  observe({
+    #update select year
+
+    year_choice = data %>% filter(suicide$State %in% input$select_state) %>% select('Year')
+    updateSelectInput(
+      session,
+      inputId = "select_year",
+      label = 'select year now',
+      choices = unique(year_choice),
+      selected = 1
+    )
+
+    #observe for histogram
+    # if(!is.null(input$histplot)){
+    #  updateCheckboxGroupInput(inputId = 'plotyear',
+    #                           label = 'Select Year to Compare',
+    #                           selected = input$select_year)
+    # }
+
+
+  })#observe-for select_state
+
+
+  dataset <- reactive({
+    state = input$select_state
+    year = input$select_year
+    gender = input$check_gender
+    df = data %>% filter(State = state,
+                         Year = year,
+                         Gender = gender) %>% select()
+    arrange(df)
+
+  })
+
+
+
+
+
+  # output$datainfo <- renderDataTable(dataset)
+}#Server
+
+
+# Run the application
+shinyApp(ui = ui, server = server)

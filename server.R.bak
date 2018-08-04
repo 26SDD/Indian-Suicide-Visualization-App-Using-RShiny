@@ -1,0 +1,63 @@
+####################INDIAN SUICIDE CASE FROM 2001-2012#######################
+
+#Packages
+ifelse(!require(shiny), install.packages('shiny'), library(shiny))
+ifelse(!require(ggthemes), install.packages('ggthemes'), library(ggthemes))
+ifelse(!require(ggplot2), install.packages('ggplot2'), library(ggplot2))
+ifelse(!require(dplyr), install.packages('dplyr'), library(dplyr))
+ifelse(!require(tidyr), install.packages('tidyr'), library(tidyr))
+ifelse(!require(data.table), install.packages('data.table'), library(data.table))
+ifelse(!require(shinythemes), install.packages('shinythemes'), library(shinythemes))
+ifelse(!require(shinydashboard), install.packages('shinydashboard'), library(shinydashboard))
+ifelse(!require(shinyjs),install.packages('shinyjs'),library(shinyjs))
+
+
+
+############################SERVER FUNCTION############################
+shinyServer(function(input, output, session) {
+  data = suicide
+  allinfo = 'Welcome here you will get the information related to the suicidal cases in india form 2001-2012'
+
+  year_choice <- NULL
+
+  #observe - ui update for year
+  observe({
+    #update select year
+    selectstate = stateinput$select_state
+    if (is.null(selectstate)) {
+      selectstate <- character(0)
+    }else{
+      year_choice = suicide %>% filter(suicide$State %in% selectstate) %>% select('Year')
+    }
+    updateSelectInput(
+      session,
+      inputId = "select_year",
+      label = 'select year now',
+      choices = unique(year_choice),
+      selected = 1
+    )
+
+    #observe for histogram
+    # if(!is.null(input$histplot)){
+    #  updateCheckboxGroupInput(inputId = 'plotyear',
+    #                           label = 'Select Year to Compare',
+    #                           selected = input$select_year)
+    # }
+
+
+  })#observe-for select_state
+
+
+  dataset <- reactive({
+    state = input$select_state
+    year = input$select_year
+    gender = input$check_gender
+    df = data %>% filter(State = state,
+                         Year = year,
+                         Gender = gender) %>% select()
+    arrange(df)
+
+  })
+
+  # output$datainfo <- renderDataTable(dataset)
+})#Server
