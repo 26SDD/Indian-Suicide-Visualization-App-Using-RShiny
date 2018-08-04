@@ -1,0 +1,3 @@
+
+              Causes     Education_Status        Means_adopted Professional_Profile        Social_Status 
+              109200                 7296                67200                49263                 4560 

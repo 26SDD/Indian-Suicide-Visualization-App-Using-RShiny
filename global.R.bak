@@ -1,0 +1,64 @@
+####################INDIAN SUICIDE CASE FROM 2001-2012#######################
+
+#Packages
+ifelse(!require(shiny), install.packages('shiny'), library(shiny))
+ifelse(!require(ggthemes), install.packages('ggthemes'), library(ggthemes))
+ifelse(!require(ggplot2), install.packages('ggplot2'), library(ggplot2))
+ifelse(!require(dplyr), install.packages('dplyr'), library(dplyr))
+ifelse(!require(tidyr), install.packages('tidyr'), library(tidyr))
+ifelse(!require(data.table), install.packages('data.table'), library(data.table))
+ifelse(!require(shinythemes), install.packages('shinythemes'), library(shinythemes))
+ifelse(!require(shinydashboard), install.packages('shinydashboard'), library(shinydashboard))
+ifelse(!require(shinyjs),install.packages('shinyjs'),library(shinyjs))
+# ifelse(!require(leaflet), install.packages('leaflet'), library(leaflet))
+# ifelse(!require(plot3D),install.packages('plot3D'),library(plot3D))
+
+
+
+#############LOAD DATA###############
+if (!exists('suicide')) {
+  suicide = fread(input = 'data/Suicides in India 2001-2012.csv', header = T)
+} else{
+  print("already exists")
+}
+
+#SINK ALL OUTPUT VALUES FROM THE CONSOLE TO TEXT FILE
+sink('type.txt')
+table(suicide$Type)
+sink()
+
+sink('causes.txt')
+table(suicide$Type_code)
+sink()
+
+sink('year.txt')
+table(suicide$Year)
+sink()
+
+sink('Age Group')
+table(suicide$Age_group)
+sink()
+
+sink('state.txt')
+table(suicide$State)
+sink()
+
+# table(suicide$State)
+
+
+
+row1 <- fluidRow(textOutput(outputId = 'infotext'))
+row2 <- fluidRow(plot('plotopt'))
+
+
+#####################FUNCTIONS#######################
+x = c('Total (All India)', 'Total (Uts)', 'Total (States)')
+choices = suicide$State[!(suicide$State %in% x)]
+
+# print(ui)
+
+
+
+
+# Run the application
+shinyApp(ui = ui, server = server)
