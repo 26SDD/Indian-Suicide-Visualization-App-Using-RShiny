@@ -1,5 +1,4 @@
 ####################INDIAN SUICIDE CASE FROM 2001-2012#######################
-
 #Packages
 ifelse(!require(shiny), install.packages('shiny'), library(shiny))
 ifelse(!require(ggthemes), install.packages('ggthemes'), library(ggthemes))
